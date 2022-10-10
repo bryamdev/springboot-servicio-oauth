@@ -27,7 +27,6 @@ public class UsuarioService implements UserDetailsService{
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
 		
 		Usuario usuario = usuarioFeignClient.findByUsername(username);
 		
