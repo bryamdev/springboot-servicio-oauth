@@ -18,7 +18,7 @@ import com.micro.springboot.app.commons.usuarios.models.entity.Usuario;
 import com.micro.springboot.app.oauth.clients.UsuarioFeignClient;
 
 @Service
-public class UsuarioService implements UserDetailsService{
+public class UsuarioService implements UserDetailsService, IUsuarioService{
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 	
@@ -52,4 +52,12 @@ public class UsuarioService implements UserDetailsService{
 						true, 
 						authorities);
 	}
+
+	@Override
+	public Usuario findByUsername(String username) {
+		return usuarioFeignClient.findByUsername(username);
+	}
+	
+	
+	
 }

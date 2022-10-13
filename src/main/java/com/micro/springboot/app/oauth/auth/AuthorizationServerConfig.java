@@ -1,16 +1,18 @@
 package com.micro.springboot.app.oauth.auth;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
@@ -20,12 +22,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-	
-	@Autowired
-	private UserDetailsService detailsService;
+
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private AdditionalTokenInfo additionalTokenInfo;
 	
 	//Configura los permisos que tendran los endpoints de AuthServer (generar token, validar token, etc)
 	@Override
@@ -62,10 +65,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		//AccesTokenConverter: componente que se encarga de guardar los datos del usuario en el token(claims)
 		//TokenStore: componente que se encarga de generar el token con datos generados con el AccesTokenConverter
+		//TokenEnhancerChain: permite contatenar Enhancer para agregar datos adocionales al token
+		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(additionalTokenInfo, accesTokenConverter()));
 		endpoints
 			.authenticationManager(authenticationManager)
 			.tokenStore(tokenStore())
-			.accessTokenConverter(accesTokenConverter());
+			.accessTokenConverter(accesTokenConverter())
+			.tokenEnhancer(tokenEnhancerChain);
 	}
 	
 	@Bean
