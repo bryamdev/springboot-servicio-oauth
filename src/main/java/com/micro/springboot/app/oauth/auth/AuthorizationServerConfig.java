@@ -23,7 +23,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	

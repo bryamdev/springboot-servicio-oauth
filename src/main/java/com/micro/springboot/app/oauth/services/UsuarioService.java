@@ -28,7 +28,7 @@ public class UsuarioService implements UserDetailsService, IUsuarioService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		Usuario usuario = usuarioFeignClient.findByUsername(username);
+		Usuario usuario = findByUsername(username);
 		
 		if(usuario == null) {
 			log.error(String.format("Error en el login, usuario '%s' no existe en el sistema", username));

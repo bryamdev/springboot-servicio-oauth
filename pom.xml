@@ -64,7 +64,7 @@
 		
 		<!-- Security dependencies -->
 		
-		<!-- Version en concreto que cuenta concomponente para generar el token -->
+		<!-- Version en concreto que cuenta con componente para generar el token -->
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
